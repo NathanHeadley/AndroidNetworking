@@ -9,20 +9,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 import zelphinstudios.courseworkapp.R;
+import zelphinstudios.courseworkapp.account.remotedb.AsyncResponse;
+import zelphinstudios.courseworkapp.account.remotedb.GetAccountsTask;
+import zelphinstudios.courseworkapp.account.remotedb.RemoteDBHelper;
 import zelphinstudios.courseworkapp.account.Account;
-import zelphinstudios.courseworkapp.account.AccountDatabaseHelper;
-import zelphinstudios.courseworkapp.account.AccountRemoteDatabaseHelper;
+import zelphinstudios.courseworkapp.account.LocalDBHelper;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
     // Variables
     private Button btnLogin, btnRegister;
     private EditText txtUsername, txtPassword;
-    private AccountDatabaseHelper accountDatabaseHelper;
-    private AccountRemoteDatabaseHelper accountRemoteDatabaseHelper;
+    private LocalDBHelper localDBHelper;
+    private RemoteDBHelper remoteDBHelper;
+    private Vector<Account> accounts = new Vector<>();
 
     // Methods
     @Override
@@ -31,8 +34,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_login);
 
         // Initialise and set up variables
-        accountDatabaseHelper = new AccountDatabaseHelper(this);
-        accountRemoteDatabaseHelper = new AccountRemoteDatabaseHelper(this);
+        localDBHelper = new LocalDBHelper(this);
+        remoteDBHelper = new RemoteDBHelper(this);
 
         btnLogin = (Button)findViewById(R.id.btnLogin);
         btnRegister = (Button)findViewById(R.id.btnRegister);
@@ -43,15 +46,26 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     public void onClick(View view_) {
+        String username = txtUsername.getText().toString();
+        String password = txtPassword.getText().toString();
+        if(accounts.size() == 0) {
+            accounts = remoteDBHelper.getAccounts();
+        } else {
+            Log.e("Nathan", "Accounts size = " + accounts.size());
+            for(Account account : accounts) {
+                Log.e("Nathan", account.getUsername());
+            }
+        }
         if(view_ == btnLogin) { // If login button is pressed
-            if(addToAccounts(txtUsername.getText().toString(), txtPassword.getText().toString())) { // If it didn't exist already
+            Account account = localDBHelper.getAccount(username);
+            if(account == null) {
+                addAccount(username, password);
                 Toast.makeText(this, "You have created an account!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
             } else {
-                Account account = accountDatabaseHelper.getAccount(txtUsername.getText().toString());
-                if(account.getPassword().equals(txtPassword.getText().toString())) {
-                    Toast.makeText(this, "Welcome " + txtUsername.getText() + "!", Toast.LENGTH_SHORT).show();
+                if(account.getPassword().equals(password)) {
+                    Toast.makeText(this, "Welcome " + username + "!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, HomeActivity.class);
                     startActivity(intent);
                 } else {
@@ -59,7 +73,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 }
             }
         } else if(view_ == btnRegister) { // If register button is pressed
-            if(addToAccounts(txtUsername.getText().toString(), txtPassword.getText().toString())) { // If it didn't exist already
+            Account account = localDBHelper.getAccount(username);
+            if(account == null) {
+                addAccount(username, password);
                 Toast.makeText(this, "You have created an account!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
@@ -69,26 +85,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public boolean addToAccounts(String username_, String password_) {
-        if(accountDatabaseHelper.addAccount(new Account(username_, password_))) {
-            accountRemoteDatabaseHelper.addAccount(new Account(username_, password_));
-            return true;
-        }
-        return false;
-    }
-
-    public void downloadRemoteDB() {
-        ArrayList<Account> accounts = accountRemoteDatabaseHelper.getAccountList();
-        for(int i = 0; i < accounts.size(); i++) {
-            Account account = accounts.get(i);
-            accountDatabaseHelper.addAccount(account);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        downloadRemoteDB();
+    public void addAccount(String username_, String password_) {
+        localDBHelper.addAccount(username_, password_);
+        remoteDBHelper.addAccount(new Account(username_, password_));
     }
 
 }
