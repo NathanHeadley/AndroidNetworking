@@ -3,6 +3,7 @@ package zelphinstudios.courseworkapp.networking;
 import android.util.Log;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -53,6 +54,16 @@ public class Server implements Runnable {
                     Log.e("Nathan", "Received message: " + inData);
                 } catch (IOException io) { Log.e("Nathan", io.toString()); }
             }
+        }
+    }
+
+    public void sendData(String string_) {
+        for(Socket client : clientSockets) {
+            try {
+                DataOutputStream outputStream = new DataOutputStream(client.getOutputStream());
+                outputStream.writeUTF(string_);
+                Log.e("Nathan", "Sent message: " + string_);
+            } catch (IOException io) { Log.e("Nathan", io.toString()); }
         }
     }
 

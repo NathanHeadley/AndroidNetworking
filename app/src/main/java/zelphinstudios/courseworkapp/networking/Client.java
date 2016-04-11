@@ -2,6 +2,7 @@ package zelphinstudios.courseworkapp.networking;
 
 import android.util.Log;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -31,6 +32,14 @@ public class Client implements Runnable {
                 } catch (IOException io) { Log.e("Nathan", io.toString()); }
             }
         }
+    }
+
+    public void sendData(String string_) {
+        try {
+            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+            outputStream.writeUTF(string_);
+            Log.e("Nathan", "Client->Server | "+string_);
+        } catch (IOException io) { Log.e("Nathan", io.toString()); }
     }
 
     // If the app is paused, stop threading
