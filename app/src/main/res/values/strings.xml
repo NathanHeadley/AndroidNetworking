@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Coursework App</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="connectedText" formatted="false">Connected: %d/2</string>
+    <string name="startButtonText">Refresh / Start Game</string>
     <string name="action_settings">Settings</string>
 </resources>

@@ -19,6 +19,10 @@ public class Server implements Runnable {
     private Vector<Socket> clientSockets = new Vector<>();
     private static final int serverPort = 8080;
 
+    public Server() {
+        onResume();
+    }
+
     // Main loop for thread
     public void run() {
         // Create server socket if null
@@ -50,6 +54,10 @@ public class Server implements Runnable {
                 } catch (IOException io) { Log.e("Nathan", io.toString()); }
             }
         }
+    }
+
+    public int getNumClients() {
+        return clientSockets.size();
     }
 
     // If the app is paused, stop threading

@@ -16,6 +16,10 @@ public class Client implements Runnable {
     private static final String serverAddress = "10.0.2.2";
     private static final int serverPort = 5050;
 
+    public Client() {
+        onResume();
+    }
+
     // Main loop for thread
     public void run() {
         // Whilst the thread is running

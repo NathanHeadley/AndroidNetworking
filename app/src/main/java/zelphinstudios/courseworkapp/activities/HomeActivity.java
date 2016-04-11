@@ -1,7 +1,11 @@
 package zelphinstudios.courseworkapp.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +18,6 @@ public class HomeActivity extends Activity implements View.OnClickListener {
 
     // Variables
     private Button btnHost, btnJoin, btnSettings, btnScores;
-
-    private Server server;
-    private Client client;
 
     // Methods
     @Override
@@ -36,14 +37,13 @@ public class HomeActivity extends Activity implements View.OnClickListener {
 
     public void onClick(View view_) {
         if (view_ == btnHost) {
-            // Start server
-            server = new Server();
-            client = new Client();
-            // Enter lobby
-            //Intent intent = new Intent(this, );
-            //startActivity(intent);
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra("hosting", true);
+            startActivity(intent);
         } else if (view_ == btnJoin) {
-
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra("hosting", false);
+            startActivity(intent);
         } else if (view_ == btnSettings) {
 
         } else if (view_ == btnScores) {

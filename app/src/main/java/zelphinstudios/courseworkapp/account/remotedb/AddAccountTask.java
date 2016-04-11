@@ -3,6 +3,7 @@ package zelphinstudios.courseworkapp.account.remotedb;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -50,6 +51,7 @@ public class AddAccountTask extends AsyncTask<Account, Void, Void> {
         accountDetails.add(new BasicNameValuePair("Password", account.getPassword()));
 
         try {
+            httpPost.addHeader("Authorization", "Basic " + Base64.encodeToString(("admin:A5cEn51On").getBytes(), Base64.NO_WRAP));
             httpPost.setEntity(new UrlEncodedFormEntity(accountDetails));
         } catch (UnsupportedEncodingException uee) { Log.e("Nathan", uee.toString()); }
 
