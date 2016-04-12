@@ -33,14 +33,12 @@ public class GameActivity extends Activity {
     }
 
     private void run() {
-        if(serverThread != null) {
-            serverThread.startServer();
-        }
         client.connectToServer();
         while(running) {
-            serverThread.checkConnections();
-            // Check serverThread for new data
-            Log.e("Nathan", serverThread.getData());
+			String cData = client.getData();
+			if(cData == "") {
+				
+			}
             Log.e("Nathan", client.getData());
             // Check client for new data
         }
@@ -50,18 +48,20 @@ public class GameActivity extends Activity {
     protected void onPause() {
         super.onPause();
         running = false;
-        if(gameView != null) {
-            gameView.onPause();
-        }
+        gameView.onPause();
+		if(serverThread != null) {
+			serverThread.onPause();
+		}
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         running = true;
-        if(gameView != null) {
-            gameView.onResume();
-        }
+        gameView.onResume();
+		if(serverThread != null) {
+			serverThread.onResume();
+		}
         run();
     }
 
