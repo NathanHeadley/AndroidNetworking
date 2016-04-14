@@ -12,11 +12,9 @@ import android.widget.Toast;
 import java.util.Vector;
 
 import zelphinstudios.courseworkapp.R;
-import zelphinstudios.courseworkapp.account.remotedb.AsyncResponse;
-import zelphinstudios.courseworkapp.account.remotedb.GetAccountsTask;
-import zelphinstudios.courseworkapp.account.remotedb.RemoteDBHelper;
-import zelphinstudios.courseworkapp.account.Account;
-import zelphinstudios.courseworkapp.account.LocalDBHelper;
+import zelphinstudios.courseworkapp.databases.remotedb.RemoteDBHelper;
+import zelphinstudios.courseworkapp.databases.Account;
+import zelphinstudios.courseworkapp.databases.LocalDBHelper;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 

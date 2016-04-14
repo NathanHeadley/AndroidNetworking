@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.account.remotedb;
+package zelphinstudios.courseworkapp.databases.remotedb;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
-import zelphinstudios.courseworkapp.account.Account;
+import zelphinstudios.courseworkapp.R;
+import zelphinstudios.courseworkapp.databases.Account;
 
 public class AddAccountTask extends AsyncTask<Account, Void, Void> {
 
@@ -34,7 +35,7 @@ public class AddAccountTask extends AsyncTask<Account, Void, Void> {
 
     // Networking Variables
     private HttpClient httpClient = new DefaultHttpClient();
-    private HttpPost httpPost = new HttpPost("http://94.194.36.248/public_html/insert.php");
+    private HttpPost httpPost = new HttpPost("http://94.194.98.112/public_html/insert.php");
 
     @Override
     protected void onPreExecute() {

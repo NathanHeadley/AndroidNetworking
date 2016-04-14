@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.account;
+package zelphinstudios.courseworkapp.databases;
 
 import android.content.ContentValues;
 import android.content.Context;

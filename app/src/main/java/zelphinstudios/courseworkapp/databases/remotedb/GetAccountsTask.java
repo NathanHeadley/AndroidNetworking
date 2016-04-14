@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.account.remotedb;
+package zelphinstudios.courseworkapp.databases.remotedb;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,13 +8,9 @@ import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +19,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Vector;
 
-import zelphinstudios.courseworkapp.account.Account;
+import zelphinstudios.courseworkapp.R;
+import zelphinstudios.courseworkapp.databases.Account;
 
 public class GetAccountsTask extends AsyncTask<Void, Void, Vector<Account>> {
 
@@ -38,7 +35,7 @@ public class GetAccountsTask extends AsyncTask<Void, Void, Vector<Account>> {
 
     // Networking Variables
     private HttpClient httpClient = new DefaultHttpClient();
-    HttpGet httpGet = new HttpGet("http://94.194.36.248/public_html/get.php");
+    HttpGet httpGet = new HttpGet("http://94.194.98.112/public_html/get.php");
 
     @Override
     protected void onPreExecute() {
@@ -56,7 +53,6 @@ public class GetAccountsTask extends AsyncTask<Void, Void, Vector<Account>> {
             HttpResponse response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             responseString = EntityUtils.toString(entity, "UTF-8");
-            Log.e("Nathan", responseString);
         } catch (IOException io) { Log.e("Nathan", io.toString()); }
 
         JSONArray accountArray = null;

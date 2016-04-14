@@ -1,7 +1,6 @@
 package zelphinstudios.courseworkapp.networking;
 
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.DataInputStream;
@@ -25,7 +24,9 @@ public class Client {
     public String getData() {
         GetData getData = new GetData();
         getData.execute();
-        Log.e("Nathan", "Client returning: " + inData);
+        if(!inData.equals("")) {
+            Log.e("Nathan", "Client returning: " + inData);
+        }
         return inData;
     }
 
@@ -60,10 +61,15 @@ public class Client {
     private class GetData extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            try {
-                DataInputStream inputStream = new DataInputStream(socket.getInputStream());
-                inData = inputStream.readUTF();Log.e("Nathan", "Received message: " + inData);
-            } catch (IOException io) { Log.e("Nathan", io.toString()); }
+            if(socket != null) {
+                try {
+                    DataInputStream inputStream = new DataInputStream(socket.getInputStream());
+                    inData = inputStream.readUTF();
+                    Log.e("Nathan", "Received message: " + inData);
+                } catch (IOException io) {
+                    Log.e("Nathan", io.toString());
+                }
+            }
             return null;
         }
     }

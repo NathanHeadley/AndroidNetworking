@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import zelphinstudios.courseworkapp.game.handlers.ObjectHandler;
 import zelphinstudios.courseworkapp.networking.Client;
 import zelphinstudios.courseworkapp.networking.ServerThread;
 import zelphinstudios.courseworkapp.views.GameView;
@@ -16,32 +17,38 @@ public class GameActivity extends Activity {
     private Client client;
     private boolean running = true;
 
+	// Game Variables
+	private ObjectHandler objectHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState_) {
         super.onCreate(savedInstanceState_);
 
-        Intent intent = getIntent();
-        boolean hosting = intent.getBooleanExtra("hosting", false);
-        if(hosting) {
-            serverThread = new ServerThread();
-        }
-
-        client = new Client();
-        gameView = new GameView(this);
+	    objectHandler = new ObjectHandler(this);
+	    Log.e("Nathan", objectHandler.getGameObject(0).getBitmap().toString());
+        gameView = new GameView(this, objectHandler);
         setContentView(gameView);
+
+	    Intent intent = getIntent();
+	    boolean hosting = intent.getBooleanExtra("hosting", false);
+	    if(hosting) {
+		    serverThread = new ServerThread();
+	    }
+
+	    client = new Client();
         run();
     }
 
     private void run() {
         client.connectToServer();
-        while(running) {
+        /*while(running) {
 			String cData = client.getData();
 			if(cData == "") {
 				
 			}
             Log.e("Nathan", client.getData());
             // Check client for new data
-        }
+        }*/
     }
 
     @Override

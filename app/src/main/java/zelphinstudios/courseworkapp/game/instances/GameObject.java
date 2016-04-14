@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.game;
+package zelphinstudios.courseworkapp.game.instances;
 
 import android.graphics.Bitmap;
 
@@ -11,8 +11,7 @@ public class GameObject {
 	
 	
 	// Constructor
-	public GameObject(int x_, int y_, int width_, int height_,
-		Bitmap bitmap_, boolean visible_, boolean solid_) {
+	public GameObject(int x_, int y_, int width_, int height_, Bitmap bitmap_, boolean visible_, boolean solid_) {
 		x = x_;
 		y = y_;
 		width = width_;

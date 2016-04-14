@@ -1,11 +1,8 @@
 package zelphinstudios.courseworkapp.networking;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
