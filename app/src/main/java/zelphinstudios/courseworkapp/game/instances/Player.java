@@ -9,6 +9,9 @@ public class Player extends GameObject {
 
 
 	// Constructor
+	public Player() {
+		super(0, 0, 32, 32, null, true, true);
+	}
 	public Player(int x_, int y_, int width_, int height_, Bitmap bitmap_, boolean visible_, boolean solid_) {
 		super(x_, y_, width_, height_, bitmap_, visible_, solid_);
 	}

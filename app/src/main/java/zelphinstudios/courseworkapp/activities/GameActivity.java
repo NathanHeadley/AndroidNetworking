@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import zelphinstudios.courseworkapp.game.handlers.ObjectHandler;
+import zelphinstudios.courseworkapp.game.instances.Player;
 import zelphinstudios.courseworkapp.networking.Client;
 import zelphinstudios.courseworkapp.networking.ServerThread;
 import zelphinstudios.courseworkapp.views.GameView;
@@ -19,14 +20,16 @@ public class GameActivity extends Activity {
 
 	// Game Variables
 	private ObjectHandler objectHandler;
+	private Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState_) {
         super.onCreate(savedInstanceState_);
 
 	    objectHandler = new ObjectHandler(this);
+		player = new Player();
 	    Log.e("Nathan", objectHandler.getGameObject(0).getBitmap().toString());
-        gameView = new GameView(this, objectHandler);
+        gameView = new GameView(this, objectHandler, player);
         setContentView(gameView);
 
 	    Intent intent = getIntent();
