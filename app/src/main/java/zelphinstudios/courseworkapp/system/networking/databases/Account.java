@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.databases;
+package zelphinstudios.courseworkapp.system.networking.databases;
 
 public class Account {
 

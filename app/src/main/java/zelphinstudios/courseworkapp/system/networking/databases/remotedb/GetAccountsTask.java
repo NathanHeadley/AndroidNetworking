@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.databases.remotedb;
+package zelphinstudios.courseworkapp.system.networking.databases.remotedb;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,8 +19,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Vector;
 
-import zelphinstudios.courseworkapp.R;
-import zelphinstudios.courseworkapp.databases.Account;
+import zelphinstudios.courseworkapp.system.networking.databases.Account;
 
 public class GetAccountsTask extends AsyncTask<Void, Void, Vector<Account>> {
 

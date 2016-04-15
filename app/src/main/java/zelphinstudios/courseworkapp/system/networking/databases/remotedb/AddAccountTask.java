@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.databases.remotedb;
+package zelphinstudios.courseworkapp.system.networking.databases.remotedb;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,8 +20,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
-import zelphinstudios.courseworkapp.R;
-import zelphinstudios.courseworkapp.databases.Account;
+import zelphinstudios.courseworkapp.system.networking.databases.Account;
 
 public class AddAccountTask extends AsyncTask<Account, Void, Void> {
 

@@ -1,9 +1,10 @@
-package zelphinstudios.courseworkapp.networking;
+package zelphinstudios.courseworkapp.system.networking.sockets;
 
 import android.util.Log;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
@@ -20,35 +21,39 @@ public class ServerThread implements Runnable {
     private String inData = "";
 
     public void run () {
-		if(socket == null) {
-			try {
-				socket = new ServerSocket(serverPort);
-				Log.e("Nathan", "Server started on port; " + serverPort);
-			} catch (IOException io) { Log.e("Nathan", io.toString()); }
-		}
-		while(running) {
+	    try {
+		    socket = new ServerSocket(serverPort);
+	    } catch (IOException io) { Log.e("Nathan", io.toString()); }
+
+		while(running && socket != null) {
+
 			// check connections
 			for(int i = 0; i < clients.size(); i++) {
                 if(clients.get(i) == null) {
                     clients.remove(i);
                 }
             }
+
             try {
                 clients.addElement(socket.accept());
                 Log.e("Nathan", "Accepted connection from: " + clients.get(clients.size() - 1).getRemoteSocketAddress());
             } catch (IOException io) { Log.e("Nathan", io.toString()); }
+
 			// check for data
 			for(Socket client : clients) {
                 try {
                     DataInputStream inputStream = new DataInputStream(client.getInputStream());
                     inData = inputStream.readUTF();
                     Log.e("Nathan", "Received message: " + inData);
-                } catch (IOException io) { Log.e("Nathan", io.toString()); }
+                } catch (IOException io) { Log.e("Nathan", "Not received any messages: " + io.toString()); }
             }
 		}
-		try {
-			socket.close();
-		} catch (IOException io) { Log.e("Nathan", io.toString()); }
+	    if(socket != null) {
+		    try {
+			    socket.close();
+		    } catch (IOException io) { io.printStackTrace(); }
+		    socket = null;
+	    }
 	}
 
 	public void onPause() {
@@ -57,7 +62,6 @@ public class ServerThread implements Runnable {
 			thread.join();
 		} catch (InterruptedException ie) { Log.e("Nathan", ie.toString()); }
 		thread = null;
-		
 	}
 	
 	public void onResume() {

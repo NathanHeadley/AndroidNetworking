@@ -1,11 +1,11 @@
-package zelphinstudios.courseworkapp.databases.remotedb;
+package zelphinstudios.courseworkapp.system.networking.databases.remotedb;
 
 import android.content.Context;
 import android.util.Log;
 
 import java.util.Vector;
 
-import zelphinstudios.courseworkapp.databases.Account;
+import zelphinstudios.courseworkapp.system.networking.databases.Account;
 
 public class RemoteDBHelper implements AsyncResponse {
 

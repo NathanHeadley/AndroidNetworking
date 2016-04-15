@@ -1,27 +1,15 @@
-package zelphinstudios.courseworkapp.game.instances;
+package zelphinstudios.courseworkapp.game.instances.GUI;
 
 import android.graphics.Bitmap;
 
-public class GameObject {
-	
+public class BaseGUI {
+
 	// Variables
-	private int x, y, width, height;
-	private Bitmap bitmap;
-	private boolean visible, solid;
-	
-	
-	// Constructor
-	public GameObject(int x_, int y_, int width_, int height_, Bitmap bitmap_, boolean visible_, boolean solid_) {
-		x = x_;
-		y = y_;
-		width = width_;
-		height = height_;
-		bitmap = bitmap_;
-		visible = visible_;
-		solid = solid_;
-	}
-	
-	
+	protected int x, y, width, height;
+	protected Bitmap bitmap;
+	protected boolean visible;
+
+
 	// Getters
 	public int getX() {
 		return x;
@@ -41,11 +29,8 @@ public class GameObject {
 	public boolean isVisible() {
 		return visible;
 	}
-	public boolean isSolid() {
-		return solid;
-	}
-	
-	
+
+
 	// Setters
 	public void setX(int x_) {
 		x = x_;
@@ -64,8 +49,5 @@ public class GameObject {
 	}
 	public void setVisible(boolean visible_) {
 		visible = visible_;
-	}
-	public void setSolid(boolean solid_) {
-		solid = solid_;
 	}
 }

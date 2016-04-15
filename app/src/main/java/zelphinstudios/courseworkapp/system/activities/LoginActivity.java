@@ -1,7 +1,8 @@
-package zelphinstudios.courseworkapp.activities;
+package zelphinstudios.courseworkapp.system.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +13,9 @@ import android.widget.Toast;
 import java.util.Vector;
 
 import zelphinstudios.courseworkapp.R;
-import zelphinstudios.courseworkapp.databases.remotedb.RemoteDBHelper;
-import zelphinstudios.courseworkapp.databases.Account;
-import zelphinstudios.courseworkapp.databases.LocalDBHelper;
+import zelphinstudios.courseworkapp.system.networking.databases.remotedb.RemoteDBHelper;
+import zelphinstudios.courseworkapp.system.networking.databases.Account;
+import zelphinstudios.courseworkapp.system.networking.databases.LocalDBHelper;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
@@ -86,6 +87,30 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     public void addAccount(String username_, String password_) {
         localDBHelper.addAccount(username_, password_);
         remoteDBHelper.addAccount(new Account(username_, password_));
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            View decorView = getWindow().getDecorView();
+            if (Build.VERSION.SDK_INT < 19) {
+                decorView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN);
+            } else {
+                decorView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
+        }
     }
 
 }

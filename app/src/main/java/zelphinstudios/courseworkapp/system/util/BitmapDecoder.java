@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.util;
+package zelphinstudios.courseworkapp.system.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

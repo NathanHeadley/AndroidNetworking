@@ -1,15 +1,16 @@
-package zelphinstudios.courseworkapp.views;
+package zelphinstudios.courseworkapp.game.views;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import zelphinstudios.courseworkapp.game.entities.ObjectEntity;
+import zelphinstudios.courseworkapp.game.entities.PlayerEntity;
 import zelphinstudios.courseworkapp.game.handlers.ObjectHandler;
 import zelphinstudios.courseworkapp.game.instances.Player;
-import zelphinstudios.courseworkapp.game.instances.GameObject;
-import android.graphics.*;
+import zelphinstudios.courseworkapp.game.instances.Object;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -42,27 +43,28 @@ public class GameView extends SurfaceView implements Runnable {
             }
             Canvas canvas = surfaceHolder.lockCanvas();
 
-	        if(context.getResources().getConfiguration().orientation == 1) { //1 = portrait, 2 = landscape
+	        if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 		        if (objectHandler.getBackground().getBitmap() != null) {
-			        for (int y = 0; y < 5; y++) {
-				        for (int x = 0; x < 5; x++) {
-					        canvas.drawBitmap(objectHandler.getBackground().getBitmap(), 96 * x, 96 * y, null);
+			        for (int y = 0; y < 12; y++) {
+				        for (int x = 0; x < 20; x++) {
+					        canvas.drawBitmap(objectHandler.getBackground().getBitmap(),
+							        x*96, y*96, null);
 				        }
 			        }
 		        }
 
-		        for (GameObject object : objectHandler.getGameObjects()) {
-			        if (object.getBitmap() != null) {
-				        canvas.drawBitmap(object.getBitmap(), object.getX(), object.getY(), null);
+		        for (ObjectEntity entity : objectHandler.getEntities()) {
+			        if (objectHandler.getObject(entity.getId()).getBitmap() != null) {
+				        canvas.drawBitmap(objectHandler.getObject(entity.getId()).getBitmap(),
+						        entity.getX(), entity.getY(), null);
 			        }
 		        }
 
-		        if (player.getBitmap() != null) {
-			        canvas.drawBitmap(player.getBitmap(), player.getX(), player.getY(), null);
+		        PlayerEntity playerEntity = player.getEntity();
+		        if (player.getBitmap(playerEntity.getDirection()) != null) {
+			        canvas.drawBitmap(player.getBitmap(playerEntity.getDirection()),
+					        playerEntity.getX(), playerEntity.getY(), null);
 		        }
-	        } else if(context.getResources().getConfiguration().orientation == 2) {
-		        //landscape
-		        Log.e("Nathan", "I'm in Landscape mode!");
 	        }
 				
             surfaceHolder.unlockCanvasAndPost(canvas);
@@ -84,5 +86,10 @@ public class GameView extends SurfaceView implements Runnable {
         thread = new Thread(this);
         thread.start();
     }
+
+	public void onDestroy() {
+		running = false;
+		thread = null;
+	}
 
 }

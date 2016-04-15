@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.networking;
+package zelphinstudios.courseworkapp.system.networking.sockets;
 
 import android.os.AsyncTask;
 import android.util.Log;
