@@ -28,7 +28,7 @@ public class ObjectHandler extends BaseHandler {
 		objects.addElement(new Object(bitmapDecoder.decode("food"), true));
 
 		// Entities
-		entities.addElement(new ObjectEntity(0, 0, 0));
+		entities.addElement(new ObjectEntity(0, 5, 5));
 	}
 
 	

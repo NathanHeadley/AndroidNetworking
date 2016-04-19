@@ -9,13 +9,12 @@ public class Button extends BaseGUI {
 	
 	
 	// Constructor
-	public Button (int x_, int y_, int width_, int height_,
-		int actionId_, Bitmap bitmap_, boolean visible_) {
+	public Button (int actionId_, int x_, int y_, int width_, int height_, Bitmap bitmap_, boolean visible_) {
+		actionId = actionId_;
 		x = x_;
 		y = y_;
 		width = width_;
 		height = height_;
-		actionId = actionId_;
 		bitmap = bitmap_;
 		visible = visible_;
 	}

@@ -4,57 +4,101 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
+import zelphinstudios.courseworkapp.game.handlers.GUIHandler;
 import zelphinstudios.courseworkapp.game.handlers.ObjectHandler;
+import zelphinstudios.courseworkapp.game.instances.GUI.Button;
+import zelphinstudios.courseworkapp.game.instances.GUI.GUI;
 import zelphinstudios.courseworkapp.game.instances.Player;
-import zelphinstudios.courseworkapp.system.networking.sockets.Client;
-import zelphinstudios.courseworkapp.system.networking.sockets.ServerThread;
-import zelphinstudios.courseworkapp.system.util.BitmapDecoder;
+import zelphinstudios.courseworkapp.system.networking.sockets.client.ClientThread;
+import zelphinstudios.courseworkapp.system.networking.sockets.server.ServerManager;
 import zelphinstudios.courseworkapp.game.views.GameView;
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity implements View.OnTouchListener {
 
     private GameView gameView;
-    private ServerThread serverThread;
-    private Client client;
+	private ServerManager serverManager;
+	private ClientThread clientThread;
+
+	// Handlers
+	private GUIHandler guiHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState_) {
 	    super.onCreate(savedInstanceState_);
 
-	    BitmapDecoder bitmapDecoder = new BitmapDecoder(this);
 	    ObjectHandler objectHandler = new ObjectHandler(this);
+	    guiHandler = new GUIHandler(this);
 	    Player player = new Player();
-	    gameView = new GameView(this, objectHandler, player);
-
-	    setContentView(gameView);
+	    gameView = new GameView(this, objectHandler, guiHandler, player);
+		gameView.setOnTouchListener(this);
 
 	    Intent intent = getIntent();
 	    boolean hosting = intent.getBooleanExtra("hosting", false);
 	    if(hosting) {
-	        serverThread = new ServerThread();
+		    serverManager = new ServerManager();
         }
 
-	    client = new Client();
+	    setContentView(gameView);
     }
+
+	@Override
+	public boolean onTouch(View view_, MotionEvent motionEvent_) {
+		if(motionEvent_.getAction() == MotionEvent.ACTION_DOWN) {
+			float x = motionEvent_.getX();
+			float y = motionEvent_.getY();
+			for(GUI gui : guiHandler.getGUIs()) {
+				if(gui.isVisible()) {
+					for(Button button : gui.getButtons()) {
+						if(button.isVisible()) {
+							if(x >= gui.getX() + button.getX()
+									&& x <= (gui.getX() + button.getX() + button.getWidth())
+									&& y >= gui.getY() + button.getY()
+									&& y <= (gui.getY() + button.getY() + button.getHeight())) {
+								if(button.getActionId() == 100) {
+									Log.e("Nathan", "Button Pressed: " + button.getActionId());
+									clientThread = new ClientThread();
+								} else if(button.getActionId() == 101) {
+									clientThread.sendData("101");
+								}
+
+
+								//clientThread.sendData(Integer.toString(button.getActionId()));
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
     @Override
     protected void onPause() {
         super.onPause();
         gameView.onPause();
-		if(serverThread != null) {
-			serverThread.onPause();
+		if(serverManager != null) {
+			serverManager.onPause();
 		}
+	    if(clientThread != null) {
+		    clientThread.onPause();
+	    }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         gameView.onResume();
-		if(serverThread != null) {
-			serverThread.onResume();
+		if(serverManager != null) {
+			serverManager.onResume();
 		}
+	    if(clientThread != null) {
+		    clientThread.onResume();
+	    }
     }
 
 	@Override
