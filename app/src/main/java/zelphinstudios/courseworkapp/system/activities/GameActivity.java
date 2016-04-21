@@ -4,15 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import zelphinstudios.courseworkapp.game.handlers.GUIHandler;
-import zelphinstudios.courseworkapp.game.handlers.ObjectHandler;
-import zelphinstudios.courseworkapp.game.instances.GUI.Button;
-import zelphinstudios.courseworkapp.game.instances.GUI.GUI;
-import zelphinstudios.courseworkapp.game.instances.Player;
+import java.util.Vector;
+
+import zelphinstudios.courseworkapp.game.entities.ObjectEntity;
+import zelphinstudios.courseworkapp.game.entities.Entities;
+import zelphinstudios.courseworkapp.game.entities.PlayerEntity;
+import zelphinstudios.courseworkapp.game.gui.Button;
+import zelphinstudios.courseworkapp.game.gui.GUI;
+import zelphinstudios.courseworkapp.game.gui.GUIHandler;
 import zelphinstudios.courseworkapp.system.networking.sockets.client.ClientThread;
 import zelphinstudios.courseworkapp.system.networking.sockets.server.ServerManager;
 import zelphinstudios.courseworkapp.game.views.GameView;
@@ -22,6 +28,8 @@ public class GameActivity extends Activity implements View.OnTouchListener {
     private GameView gameView;
 	private ServerManager serverManager;
 	private ClientThread clientThread;
+	private Handler clientHandler;
+	private Entities entities;
 
 	// Handlers
 	private GUIHandler guiHandler;
@@ -30,20 +38,62 @@ public class GameActivity extends Activity implements View.OnTouchListener {
     protected void onCreate(Bundle savedInstanceState_) {
 	    super.onCreate(savedInstanceState_);
 
-	    ObjectHandler objectHandler = new ObjectHandler(this);
+	    createHandler();
+
 	    guiHandler = new GUIHandler(this);
-	    Player player = new Player();
-	    gameView = new GameView(this, objectHandler, guiHandler, player);
+	    entities = new Entities(this);
+	    gameView = new GameView(this, guiHandler, entities);
 		gameView.setOnTouchListener(this);
 
 	    Intent intent = getIntent();
 	    boolean hosting = intent.getBooleanExtra("hosting", false);
 	    if(hosting) {
-		    serverManager = new ServerManager();
-        }
+		    serverManager = new ServerManager(this, clientHandler);
+        } else {
+		    clientThread = new ClientThread(clientHandler);
+	    }
 
 	    setContentView(gameView);
     }
+
+	private void createHandler() {
+		clientHandler = new Handler(Looper.getMainLooper()) {
+			public void handleMessage(Message message_) {
+				String message = (String) message_.obj;
+				Log.e("Nathan", "ClientHandler: " + message);
+				if(message != null) {
+					String[] type = message.split("~");
+					if(type[0].equals("server")) {
+						if (type[1].equals("started")) {
+							clientThread = new ClientThread(clientHandler);
+						}
+					} else if(type[0].equals("objects")) {
+							Log.e("Nathan", "Full Message = " + message);
+							String[] subMessages = type[1].split("\\|");
+							Vector<ObjectEntity> receivedEntities = new Vector<>();
+							for (String s : subMessages) {
+								String[] subMessage = s.split("\\-");
+								//Log.e("Nathan", "SubMessage - " + subMessage[0] + "-" + subMessage[1] + "-" + subMessage[2]);
+								if (Integer.parseInt(subMessage[0]) < 2) {
+									receivedEntities.addElement(new ObjectEntity(Integer.parseInt(subMessage[0]),
+											Integer.parseInt(subMessage[2]),
+											Integer.parseInt(subMessage[1])));
+								} else {
+									entities.addPlayerEntity(new PlayerEntity(Integer.parseInt(subMessage[2]),
+											Integer.parseInt(subMessage[1])));
+								}
+							}
+							entities.addEntities(receivedEntities);
+					} else if(type[0].equals("position")) {
+						if(type[1].equals("y")) {
+							entities.getPlayerEntity(0).setY(Integer.parseInt(type[2]));
+							Log.e("Nathan", "Moved to Y = " + type[2]);
+						}
+					}
+				}
+			}
+		};
+	}
 
 	@Override
 	public boolean onTouch(View view_, MotionEvent motionEvent_) {
@@ -58,15 +108,7 @@ public class GameActivity extends Activity implements View.OnTouchListener {
 									&& x <= (gui.getX() + button.getX() + button.getWidth())
 									&& y >= gui.getY() + button.getY()
 									&& y <= (gui.getY() + button.getY() + button.getHeight())) {
-								if(button.getActionId() == 100) {
-									Log.e("Nathan", "Button Pressed: " + button.getActionId());
-									clientThread = new ClientThread();
-								} else if(button.getActionId() == 101) {
-									clientThread.sendData("101");
-								}
-
-
-								//clientThread.sendData(Integer.toString(button.getActionId()));
+								clientThread.sendData(Integer.toString(button.getActionId()));
 								return true;
 							}
 						}

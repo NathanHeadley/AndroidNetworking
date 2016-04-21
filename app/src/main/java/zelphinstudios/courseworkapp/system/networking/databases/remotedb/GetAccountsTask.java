@@ -34,7 +34,7 @@ public class GetAccountsTask extends AsyncTask<Void, Void, Vector<Account>> {
 
     // Networking Variables
     private HttpClient httpClient = new DefaultHttpClient();
-    HttpGet httpGet = new HttpGet("http://94.194.98.112/public_html/get.php");
+    HttpGet httpGet = new HttpGet("http://94.194.98.112/public_html/getaccounts.php");
 
     @Override
     protected void onPreExecute() {
@@ -77,7 +77,7 @@ public class GetAccountsTask extends AsyncTask<Void, Void, Vector<Account>> {
     @Override
     protected void onPostExecute(Vector<Account> accounts_) {
         this.progressDialog.dismiss();
-        asyncResponse.processFinish(accounts_);
+        asyncResponse.processFinishAccounts(accounts_);
     }
 
 }

@@ -8,9 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.Vector;
 
+import zelphinstudios.courseworkapp.game.entities.PlayerEntity;
+
 public class LocalDBHelper extends SQLiteOpenHelper {
 
-    private static final String[] COLUMN_NAMES = {"Username", "Password"};
+    private static final String[] ACCOUNTS_COLUMN_NAMES = {"Username", "Password"};
     private static final String ACCOUNTS_TABLE_CREATE = "CREATE TABLE accounts (Username TEXT, Password TEXT);";
 
     public LocalDBHelper(Context context_) {
@@ -40,7 +42,7 @@ public class LocalDBHelper extends SQLiteOpenHelper {
 
     public Vector<Account> getAccountList() {
         SQLiteDatabase database = this.getReadableDatabase();
-        Cursor result = database.query("accounts", COLUMN_NAMES, null, null, null, null, null, null);
+        Cursor result = database.query("accounts", ACCOUNTS_COLUMN_NAMES, null, null, null, null, null, null);
         Vector<Account> accounts = new Vector<>();
         for(int i = 0; i < result.getCount(); i++) {
             result.moveToPosition(i);

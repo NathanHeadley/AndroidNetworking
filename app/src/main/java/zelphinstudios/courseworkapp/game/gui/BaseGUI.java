@@ -1,4 +1,4 @@
-package zelphinstudios.courseworkapp.game.instances.GUI;
+package zelphinstudios.courseworkapp.game.gui;
 
 import android.graphics.Bitmap;
 

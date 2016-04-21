@@ -1,6 +1,7 @@
 package zelphinstudios.courseworkapp.system.networking.sockets.server;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.IOException;
@@ -28,11 +29,23 @@ public class ServerThread extends BaseThread {
 		    Log.e("Nathan", "Started server on: " + serverPort);
 	    } catch (IOException io) { Log.e("Nathan", io.toString()); }
 
+		Message message1 = Message.obtain();
+		message1.obj = "started";
+		serverHandler.sendMessage(message1);
+
 		while(running && socket != null) {
             try {
 	            connections.add(new ConnectionThread(socket.accept(), serverHandler));
                 Log.e("Nathan", "Accepted connection!");
             } catch (IOException io) { Log.e("Nathan", io.toString()); }
+			if(connections.size() == 1) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ie) { ie.printStackTrace(); }
+				Message message = Message.obtain();
+				message.obj = "ready";
+				serverHandler.sendMessage(message);
+			}
 		}
 
 	    if(socket != null) {

@@ -34,7 +34,7 @@ public class AddAccountTask extends AsyncTask<Account, Void, Void> {
 
     // Networking Variables
     private HttpClient httpClient = new DefaultHttpClient();
-    private HttpPost httpPost = new HttpPost("http://94.194.98.112/public_html/insert.php");
+    private HttpPost httpPost = new HttpPost("http://94.194.98.112/public_html/addaccount.php");
 
     @Override
     protected void onPreExecute() {

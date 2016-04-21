@@ -1,14 +1,12 @@
-package zelphinstudios.courseworkapp.game.handlers;
+package zelphinstudios.courseworkapp.game.gui;
 
 import android.content.Context;
 
 import java.util.Vector;
 
-import zelphinstudios.courseworkapp.game.instances.GUI.Button;
-import zelphinstudios.courseworkapp.game.instances.GUI.GUI;
 import zelphinstudios.courseworkapp.system.util.BitmapDecoder;
 
-public class GUIHandler extends BaseHandler {
+public class GUIHandler {
 
 	// Variables
 	private Vector<GUI> guis = new Vector<>();
@@ -16,7 +14,7 @@ public class GUIHandler extends BaseHandler {
 
 	// Constructor
 	public GUIHandler(Context context_) {
-		bitmapDecoder = new BitmapDecoder(context_);
+		BitmapDecoder bitmapDecoder = new BitmapDecoder(context_);
 
 		GUI gui = new GUI(40, 600, bitmapDecoder.decode(""), true);
 		gui.addButton(new Button(100, 144, 0,   144, 144, bitmapDecoder.decode("button_north"), true));

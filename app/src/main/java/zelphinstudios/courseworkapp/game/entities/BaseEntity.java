@@ -4,7 +4,6 @@ public class BaseEntity {
 
 	// Variables
 	protected int x, y;
-	protected boolean visible;
 
 
 	// Getters
@@ -20,9 +19,6 @@ public class BaseEntity {
 	public int getAbsY() {
 		return y / 96;
 	}
-	public boolean isVisible() {
-		return visible;
-	}
 
 
 	// Setters
@@ -31,8 +27,5 @@ public class BaseEntity {
 	}
 	public void setY(int y_) {
 		y = y_ * 96;
-	}
-	public void setVisible(boolean visible_) {
-		visible = visible_;
 	}
 }

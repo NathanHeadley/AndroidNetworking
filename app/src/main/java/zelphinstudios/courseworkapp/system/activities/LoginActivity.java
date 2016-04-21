@@ -34,7 +34,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         // Initialise and set up variables
         localDBHelper = new LocalDBHelper(this);
-        remoteDBHelper = new RemoteDBHelper(this);
+        remoteDBHelper = new RemoteDBHelper(this, "accounts");
 
         btnLogin = (Button)findViewById(R.id.btnLogin);
         btnRegister = (Button)findViewById(R.id.btnRegister);

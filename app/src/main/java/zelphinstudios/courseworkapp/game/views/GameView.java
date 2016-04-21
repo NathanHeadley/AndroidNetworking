@@ -2,42 +2,42 @@ package zelphinstudios.courseworkapp.game.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import zelphinstudios.courseworkapp.game.entities.Entities;
 import zelphinstudios.courseworkapp.game.entities.ObjectEntity;
 import zelphinstudios.courseworkapp.game.entities.PlayerEntity;
-import zelphinstudios.courseworkapp.game.handlers.GUIHandler;
-import zelphinstudios.courseworkapp.game.handlers.ObjectHandler;
-import zelphinstudios.courseworkapp.game.instances.GUI.Button;
-import zelphinstudios.courseworkapp.game.instances.GUI.GUI;
-import zelphinstudios.courseworkapp.game.instances.GUI.TextField;
-import zelphinstudios.courseworkapp.game.instances.Player;
+import zelphinstudios.courseworkapp.game.gui.Button;
+import zelphinstudios.courseworkapp.game.gui.GUI;
+import zelphinstudios.courseworkapp.game.gui.GUIHandler;
+import zelphinstudios.courseworkapp.game.gui.TextField;
 
 public class GameView extends SurfaceView implements Runnable {
 
     // Threading
-	private Context context;
     private Thread thread = null;
+	private boolean running = false;
+
+	private Context context;
     private SurfaceHolder surfaceHolder;
-    private boolean running = false;
-
-    private ObjectHandler objectHandler;
 	private GUIHandler guiHandler;
-	private Player player;
+	private Entities entities;
 
-	public GameView(Context context_) {
+	public GameView(Context context_) { // Just to keep android studio happy
 		super(context_);
 		context = context_;
+		surfaceHolder = getHolder();
 	}
 
-    public GameView(Context context_, ObjectHandler objectHandler_, GUIHandler guiHandler_, Player player_) {
+    public GameView(Context context_, GUIHandler guiHandler_, Entities entities_) {
         super(context_);
 	    context = context_;
         surfaceHolder = getHolder();
-        objectHandler = objectHandler_;
 	    guiHandler = guiHandler_;
-		player = player_;
+	    entities = entities_;
     }
 
     public void run() {
@@ -46,30 +46,25 @@ public class GameView extends SurfaceView implements Runnable {
                 continue;
             }
             Canvas canvas = surfaceHolder.lockCanvas();
-
+			canvas.drawColor(Color.BLACK);
 	        // Draw background
-	        if (objectHandler.getBackground().getBitmap() != null) {
-		        for (int y = 0; y < 12; y++) {
-			        for (int x = 0; x < 20; x++) {
-				        canvas.drawBitmap(objectHandler.getBackground().getBitmap(),
-						        x*96, y*96, null);
-			        }
-		        }
-	        }
 
 	        // Draw game objects
-	        for (ObjectEntity entity : objectHandler.getEntities()) {
-		        if (objectHandler.getObject(entity.getId()).getBitmap() != null) {
-			        canvas.drawBitmap(objectHandler.getObject(entity.getId()).getBitmap(),
-					        entity.getX(), entity.getY(), null);
-		        }
-	        }
+			for(ObjectEntity entity : entities.getObjectEntities()) {
+				if(entity.getId() == 0) {
+					canvas.drawBitmap(entities.getBarrier(),
+							entity.getX(), entity.getY(), null);
+				} else if(entity.getId() == 1) {
+					canvas.drawBitmap(entities.getFood(),
+							entity.getX(), entity.getY(), null);
+				}
+			}
 
 	        // Draw player
-	        PlayerEntity playerEntity = player.getEntity();
-	        if (player.getBitmap(playerEntity.getDirection()) != null) {
-		        canvas.drawBitmap(player.getBitmap(playerEntity.getDirection()),
-				        playerEntity.getX(), playerEntity.getY(), null);
+	        for(PlayerEntity player : entities.getPlayerEntities()) {
+		        Log.e("Nathan", "X=" + player.getX() + ", Y=" + player.getY());
+		        canvas.drawBitmap(entities.getPlayer(player.getDirection()),
+				        player.getX(), player.getY(), null);
 	        }
 
 	        // Draw interfaces
