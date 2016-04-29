@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import java.util.Vector;
 
+// Class to store GUIs
 public class GUI extends BaseGUI {
 
 	// Variables

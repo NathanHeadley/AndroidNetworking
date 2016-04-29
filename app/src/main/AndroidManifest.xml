@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,10 @@
             android:name=".system.activities.GameActivity"
             android:screenOrientation="landscape"
             android:label="GameActivity" >
+        </activity>
+        <activity
+            android:name=".system.activities.HighscoreActivity"
+            android:label="HighscoreActivity" >
         </activity>
     </application>
 

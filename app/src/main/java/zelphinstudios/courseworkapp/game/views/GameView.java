@@ -15,31 +15,33 @@ import zelphinstudios.courseworkapp.game.gui.GUI;
 import zelphinstudios.courseworkapp.game.gui.GUIHandler;
 import zelphinstudios.courseworkapp.game.gui.TextField;
 
+// Class to draw everything to screen on a surface view
 public class GameView extends SurfaceView implements Runnable {
 
+	// Variables
     // Threading
     private Thread thread = null;
 	private boolean running = false;
-
-	private Context context;
+	// Handlers
     private SurfaceHolder surfaceHolder;
 	private GUIHandler guiHandler;
 	private Entities entities;
 
+
+	// Constructors
 	public GameView(Context context_) { // Just to keep android studio happy
 		super(context_);
-		context = context_;
 		surfaceHolder = getHolder();
 	}
-
     public GameView(Context context_, GUIHandler guiHandler_, Entities entities_) {
         super(context_);
-	    context = context_;
         surfaceHolder = getHolder();
 	    guiHandler = guiHandler_;
 	    entities = entities_;
     }
 
+
+	// Main method for the thread
     public void run() {
         while(running) {
             if(!surfaceHolder.getSurface().isValid()) {
@@ -47,22 +49,22 @@ public class GameView extends SurfaceView implements Runnable {
             }
             Canvas canvas = surfaceHolder.lockCanvas();
 			canvas.drawColor(Color.BLACK);
-	        // Draw background
 
 	        // Draw game objects
 			for(ObjectEntity entity : entities.getObjectEntities()) {
-				if(entity.getId() == 0) {
-					canvas.drawBitmap(entities.getBarrier(),
-							entity.getX(), entity.getY(), null);
-				} else if(entity.getId() == 1) {
-					canvas.drawBitmap(entities.getFood(),
-							entity.getX(), entity.getY(), null);
+				if(entity.isVisible()) {
+					if (entity.getId() == 0) {
+						canvas.drawBitmap(entities.getBarrier(),
+								entity.getX(), entity.getY(), null);
+					} else if (entity.getId() == 1) {
+						canvas.drawBitmap(entities.getFood(),
+								entity.getX(), entity.getY(), null);
+					}
 				}
 			}
 
 	        // Draw player
 	        for(PlayerEntity player : entities.getPlayerEntities()) {
-		        Log.e("Nathan", "X=" + player.getX() + ", Y=" + player.getY());
 		        canvas.drawBitmap(entities.getPlayer(player.getDirection()),
 				        player.getX(), player.getY(), null);
 	        }
@@ -100,6 +102,8 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+
+	// Methods for stopping and starting thread
     public void onPause() {
         running = false;
         try {
@@ -109,7 +113,6 @@ public class GameView extends SurfaceView implements Runnable {
         }
         thread = null;
     }
-
     public void onResume() {
         running = true;
         thread = new Thread(this);

@@ -8,4 +8,5 @@ import zelphinstudios.courseworkapp.system.networking.databases.Object;
 public interface AsyncResponse {
     void processFinishAccounts(Vector<Account> accounts_);
     void processFinishObjects(Vector<Object> objects_);
+    void processFinishScores(Vector<Integer> scores_);
 }

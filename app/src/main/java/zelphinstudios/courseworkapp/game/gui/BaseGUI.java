@@ -2,6 +2,7 @@ package zelphinstudios.courseworkapp.game.gui;
 
 import android.graphics.Bitmap;
 
+// Base class for all GUI elements
 public class BaseGUI {
 
 	// Variables

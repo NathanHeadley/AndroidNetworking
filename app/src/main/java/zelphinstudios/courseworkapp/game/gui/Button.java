@@ -2,6 +2,7 @@ package zelphinstudios.courseworkapp.game.gui;
 
 import android.graphics.Bitmap;
 
+// Class to store buttons
 public class Button extends BaseGUI {
 	
 	// Variables

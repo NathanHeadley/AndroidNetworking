@@ -11,7 +11,12 @@ import java.net.Socket;
 
 import zelphinstudios.courseworkapp.system.util.BaseThread;
 
-public class ConnectionThread extends BaseThread {
+public class ConnectionThread implements Runnable {
+
+	// Threading
+	private Thread thread = null;
+	private boolean running = false;
+
 
 	private Socket socket;
 	private Handler serverHandler;
@@ -27,13 +32,15 @@ public class ConnectionThread extends BaseThread {
 		while(running) {
 			try {
 				DataInputStream inputStream = new DataInputStream(socket.getInputStream());
-				if(inputStream.available() > 0) {
+				if (inputStream.available() > 0) {
 					Message message = Message.obtain();
 					message.obj = inputStream.readUTF();
 					Log.e("Nathan", "Server received: " + message.toString());
 					serverHandler.sendMessage(message);
 				}
-			} catch (IOException io) { io.printStackTrace(); }
+			} catch (IOException io) {
+				io.printStackTrace();
+			}
 		}
 	}
 
@@ -42,6 +49,20 @@ public class ConnectionThread extends BaseThread {
 			DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
 			outputStream.writeUTF(data_);
 		} catch (IOException io) { io.printStackTrace(); }
+	}
+
+	public void onPause() {
+		running = false;
+		try {
+			thread.join();
+		} catch (InterruptedException ie) { Log.e("Nathan", "ConnectionThread: " + ie.toString()); }
+		thread = null;
+	}
+
+	public void onResume() {
+		running = true;
+		thread = new Thread(this);
+		thread.start();
 	}
 
 }

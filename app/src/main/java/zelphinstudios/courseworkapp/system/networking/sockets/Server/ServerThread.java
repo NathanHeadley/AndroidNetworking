@@ -10,7 +10,12 @@ import java.util.Vector;
 
 import zelphinstudios.courseworkapp.system.util.BaseThread;
 
-public class ServerThread extends BaseThread {
+public class ServerThread implements Runnable {
+
+	// Threading
+	private Thread thread = null;
+	private boolean running = false;
+
 
     private ServerSocket socket;
     private static final int serverPort = 8080;
@@ -27,21 +32,20 @@ public class ServerThread extends BaseThread {
 	    try {
 		    socket = new ServerSocket(serverPort);
 		    Log.e("Nathan", "Started server on: " + serverPort);
-	    } catch (IOException io) { Log.e("Nathan", io.toString()); }
+	    } catch (IOException io) { Log.e("Nathan", "or me:   " + io.toString()); }
 
 		Message message1 = Message.obtain();
 		message1.obj = "started";
 		serverHandler.sendMessage(message1);
 
-		while(running && socket != null) {
+		while(running) {
             try {
+	            Log.e("Nathan", "Listening...");
 	            connections.add(new ConnectionThread(socket.accept(), serverHandler));
                 Log.e("Nathan", "Accepted connection!");
-            } catch (IOException io) { Log.e("Nathan", io.toString()); }
-			if(connections.size() == 1) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException ie) { ie.printStackTrace(); }
+	            connections.lastElement().sendData(connections.size() + "~server");
+            } catch (IOException io) { Log.e("Nathan", "It's not me : " + io.toString()); }
+			if(connections.size() == 2) {
 				Message message = Message.obtain();
 				message.obj = "ready";
 				serverHandler.sendMessage(message);
@@ -54,6 +58,21 @@ public class ServerThread extends BaseThread {
 		    } catch (IOException io) { io.printStackTrace(); }
 		    socket = null;
 	    }
+	}
+
+	public void onPause() {
+		running = false;
+		thread = null;
+	}
+
+	public void onResume() {
+		running = true;
+		thread = new Thread(this);
+		thread.start();
+	}
+
+	public Vector<ConnectionThread> getConnectionThreads() {
+		return connections;
 	}
 
 }

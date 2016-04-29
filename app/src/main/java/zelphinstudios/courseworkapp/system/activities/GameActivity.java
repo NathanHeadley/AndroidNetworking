@@ -1,6 +1,7 @@
 package zelphinstudios.courseworkapp.system.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,11 +26,13 @@ import zelphinstudios.courseworkapp.game.views.GameView;
 
 public class GameActivity extends Activity implements View.OnTouchListener {
 
+	private Context context = this;
     private GameView gameView;
 	private ServerManager serverManager;
 	private ClientThread clientThread;
 	private Handler clientHandler;
 	private Entities entities;
+	private boolean hosting = false;
 
 	// Handlers
 	private GUIHandler guiHandler;
@@ -46,7 +49,7 @@ public class GameActivity extends Activity implements View.OnTouchListener {
 		gameView.setOnTouchListener(this);
 
 	    Intent intent = getIntent();
-	    boolean hosting = intent.getBooleanExtra("hosting", false);
+	    hosting = intent.getBooleanExtra("hosting", false);
 	    if(hosting) {
 		    serverManager = new ServerManager(this, clientHandler);
         } else {
@@ -60,35 +63,72 @@ public class GameActivity extends Activity implements View.OnTouchListener {
 		clientHandler = new Handler(Looper.getMainLooper()) {
 			public void handleMessage(Message message_) {
 				String message = (String) message_.obj;
-				Log.e("Nathan", "ClientHandler: " + message);
 				if(message != null) {
 					String[] type = message.split("~");
-					if(type[0].equals("server")) {
-						if (type[1].equals("started")) {
-							clientThread = new ClientThread(clientHandler);
-						}
-					} else if(type[0].equals("objects")) {
-							Log.e("Nathan", "Full Message = " + message);
-							String[] subMessages = type[1].split("\\|");
+					int client = Integer.parseInt(type[0]);
+					switch(type[1]) {
+						case "server":
+							if(type.length == 2) {
+								clientThread.setClientNumber(client);
+							} else {
+								if(hosting) {
+									clientThread = new ClientThread(clientHandler);
+									clientThread.onResume();
+								}
+							}
+							break;
+						case "objects":
+							guiHandler.getGUI(2).setVisible(false);
+							guiHandler.getGUI(1).setVisible(true);
+							String[] subMessages = type[2].split("\\|");
 							Vector<ObjectEntity> receivedEntities = new Vector<>();
 							for (String s : subMessages) {
 								String[] subMessage = s.split("\\-");
-								//Log.e("Nathan", "SubMessage - " + subMessage[0] + "-" + subMessage[1] + "-" + subMessage[2]);
 								if (Integer.parseInt(subMessage[0]) < 2) {
 									receivedEntities.addElement(new ObjectEntity(Integer.parseInt(subMessage[0]),
-											Integer.parseInt(subMessage[2]),
-											Integer.parseInt(subMessage[1])));
+											Integer.parseInt(subMessage[1]),
+											Integer.parseInt(subMessage[2])));
 								} else {
-									entities.addPlayerEntity(new PlayerEntity(Integer.parseInt(subMessage[2]),
-											Integer.parseInt(subMessage[1])));
+									entities.addPlayerEntity(new PlayerEntity(Integer.parseInt(subMessage[1]),
+											Integer.parseInt(subMessage[2])));
 								}
 							}
 							entities.addEntities(receivedEntities);
-					} else if(type[0].equals("position")) {
-						if(type[1].equals("y")) {
-							entities.getPlayerEntity(0).setY(Integer.parseInt(type[2]));
-							Log.e("Nathan", "Moved to Y = " + type[2]);
-						}
+							break;
+						case "position":
+							if(type[2].equals("x")) {
+								int oldX = entities.getPlayerEntity(client - 1).getAbsX();
+								if(Integer.parseInt(type[3]) - oldX > 0) {
+									entities.getPlayerEntity(client - 1).setDirection(1);
+								} else {
+									entities.getPlayerEntity(client - 1).setDirection(3);
+								}
+								entities.getPlayerEntity(client - 1).setX(Integer.parseInt(type[3]));
+							} else if(type[2].equals("y")) {
+								int oldY = entities.getPlayerEntity(client - 1).getAbsY();
+								if(Integer.parseInt(type[3]) - oldY > 0) {
+									entities.getPlayerEntity(client - 1).setDirection(2);
+								} else {
+									entities.getPlayerEntity(client - 1).setDirection(0);
+								}
+								entities.getPlayerEntity(client - 1).setY(Integer.parseInt(type[3]));
+							}
+							break;
+						case "score":
+							if(clientThread.getClientNumber() == client) {
+								entities.getPlayerEntity(client - 1).setScore(Integer.parseInt(type[2]));
+								guiHandler.getGUI(1).getTextField(0).setText("Score: " + entities.getPlayerEntity(client - 1).getScore());
+							}
+							for(ObjectEntity object : entities.getObjectEntities()) {
+								if(object.getX() == entities.getPlayerEntity(client - 1).getX() && object.getY() == entities.getPlayerEntity(client - 1).getY()) {
+									object.setVisible(false);
+								}
+							}
+							break;
+						case "gameover":
+							Intent intent = new Intent(context, HighscoreActivity.class);
+							context.startActivity(intent);
+							break;
 					}
 				}
 			}
@@ -122,24 +162,28 @@ public class GameActivity extends Activity implements View.OnTouchListener {
     @Override
     protected void onPause() {
         super.onPause();
-        gameView.onPause();
-		if(serverManager != null) {
-			serverManager.onPause();
-		}
-	    if(clientThread != null) {
-		    clientThread.onPause();
+	    clientThread.onPause();
+	    if(serverManager != null) {
+		    if(serverManager.getServerThread() != null) {
+			    serverManager.getServerThread().getConnectionThreads().get(0).onPause();
+			    serverManager.getServerThread().onPause();
+			    serverManager.onPause();
+		    }
 	    }
+	    gameView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        gameView.onResume();
-		if(serverManager != null) {
-			serverManager.onResume();
-		}
 	    if(clientThread != null) {
 		    clientThread.onResume();
+	    }
+	    if(serverManager != null) {
+		    serverManager.onResume();
+	    }
+	    if(gameView != null) {
+		    gameView.onResume();
 	    }
     }
 

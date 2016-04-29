@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Coursework App</string>
     <string name="action_settings">Settings</string>
+    <string name="highscore_text_1">1st: %1d</string>
+    <string name="highscore_text_2">2nd: %1d</string>
 </resources>

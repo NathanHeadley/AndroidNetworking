@@ -7,14 +7,17 @@ import java.util.Vector;
 
 import zelphinstudios.courseworkapp.system.util.BitmapDecoder;
 
+// Class to handle various entities
 public class Entities {
 
+	// Variables
 	private Vector<ObjectEntity> objectEntities = new Vector<>();
 	private Vector<PlayerEntity> playerEntities = new Vector<>();
 	private Bitmap barrier, food;
 	private Bitmap[] player = new Bitmap[4];
 
 
+	// Constructor
 	public Entities(Context context_) {
 		BitmapDecoder bitmapDecoder = new BitmapDecoder(context_);
 		barrier = bitmapDecoder.decode("barrier");
@@ -26,6 +29,7 @@ public class Entities {
 	}
 
 
+	// Getters
 	public Vector<ObjectEntity> getObjectEntities() {
 		return objectEntities;
 	}
@@ -46,11 +50,9 @@ public class Entities {
 	}
 
 
+	// Setters
 	public void addEntities(Vector<ObjectEntity> entities_) {
 		objectEntities = entities_;
-	}
-	public void addEntity(ObjectEntity entity_) {
-		objectEntities.addElement(entity_);
 	}
 	public void addPlayerEntity(PlayerEntity entity_) {
 		playerEntities.addElement(entity_);

@@ -1,20 +1,24 @@
 package zelphinstudios.courseworkapp.game.gui;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 
+// Class to store text fields
 public class TextField extends BaseGUI {
 
 	// Variables
 	private String text;
-	private Paint paint;
+	private Paint paint = new Paint();
 
 
 	// Constructor
-	public TextField(int x_, int y_, String text_, Paint paint_, boolean visible_) {
+	public TextField(int x_, int y_, String text_, boolean visible_) {
 		x = x_;
 		y = y_;
 		text = text_;
-		paint = paint_;
+		paint.setTextSize(40);
+		paint.setTextAlign(Paint.Align.LEFT);
+		paint.setColor(Color.WHITE);
 		visible = visible_;
 	}
 

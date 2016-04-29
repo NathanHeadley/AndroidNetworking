@@ -1,5 +1,6 @@
 package zelphinstudios.courseworkapp.game.entities;
 
+// Base class for all entities
 public class BaseEntity {
 
 	// Variables

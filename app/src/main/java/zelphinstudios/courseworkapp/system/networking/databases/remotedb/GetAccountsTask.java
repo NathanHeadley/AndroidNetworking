@@ -34,7 +34,7 @@ public class GetAccountsTask extends AsyncTask<Void, Void, Vector<Account>> {
 
     // Networking Variables
     private HttpClient httpClient = new DefaultHttpClient();
-    HttpGet httpGet = new HttpGet("http://94.194.98.112/public_html/getaccounts.php");
+    HttpGet httpGet = new HttpGet("http://94.194.98.255/public_html/accounts/get_accounts.php");
 
     @Override
     protected void onPreExecute() {
