@@ -114,7 +114,7 @@ public class ServerManager implements Runnable {
 							sendData("score~" + players.get(client).getScore(), client+1);
 						}
 
-						if(players.get(0).getScore() + players.get(1).getScore() == 20) {
+						if(players.get(0).getScore() + players.get(1).getScore() == 570) {
 							remoteDBHelperScores.addScore(players.get(0).getScore());
 							remoteDBHelperScores.addScore(players.get(1).getScore());
 							sendData("gameover", 0);

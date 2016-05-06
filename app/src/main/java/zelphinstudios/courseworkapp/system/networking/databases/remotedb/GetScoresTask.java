@@ -35,7 +35,7 @@ public class GetScoresTask extends AsyncTask<TextView, Void, Vector<Integer>> {
 	}
 
 	private HttpClient httpClient = new DefaultHttpClient();
-	private HttpGet httpGet = new HttpGet("http://94.194.98.255/public_html/high_scores/get_scores.php");
+	private HttpGet httpGet = new HttpGet("http://151.225.131.91/public_html/high_scores/get_scores.php");
 
 	@Override
 	protected void onPreExecute() {

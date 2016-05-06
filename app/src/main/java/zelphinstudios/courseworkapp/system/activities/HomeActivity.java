@@ -12,7 +12,7 @@ import zelphinstudios.courseworkapp.R;
 public class HomeActivity extends Activity implements View.OnClickListener {
 
     // Variables
-    private Button btnHost, btnJoin, btnSettings, btnScores;
+    private Button btnHost, btnJoin, btnScores;
 
     // Methods
     @Override
@@ -22,11 +22,9 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         // Setup UI buttons with click listeners
         btnHost = (Button)findViewById(R.id.btnHost);
         btnJoin = (Button)findViewById(R.id.btnJoin);
-        btnSettings = (Button)findViewById(R.id.btnSettings);
         btnScores = (Button)findViewById(R.id.btnScores);
         btnHost.setOnClickListener(this);
         btnJoin.setOnClickListener(this);
-        btnSettings.setOnClickListener(this);
         btnScores.setOnClickListener(this);
     }
 
@@ -39,10 +37,9 @@ public class HomeActivity extends Activity implements View.OnClickListener {
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra("hosting", false);
             startActivity(intent);
-        } else if (view_ == btnSettings) {
-
         } else if (view_ == btnScores) {
-
+            Intent intent = new Intent(this, HighscoreActivity.class);
+            startActivity(intent);
         }
     }
 

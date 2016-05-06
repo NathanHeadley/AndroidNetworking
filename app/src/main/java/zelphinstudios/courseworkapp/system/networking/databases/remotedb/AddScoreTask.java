@@ -34,7 +34,7 @@ public class AddScoreTask extends AsyncTask<Integer, Void, Void> {
 	}
 
 	private HttpClient httpClient = new DefaultHttpClient();
-	private HttpPost httpPost = new HttpPost("http://94.194.98.255/public_html/high_scores/add_score.php");
+	private HttpPost httpPost = new HttpPost("http://151.225.131.91/public_html/high_scores/add_score.php");
 
 	@Override
 	protected void onPreExecute() {

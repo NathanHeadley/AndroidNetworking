@@ -34,7 +34,7 @@ public class GetObjectsTask extends AsyncTask<Void, Void, Vector<Object>> {
 
 	// Networking Variables
 	private HttpClient httpClient = new DefaultHttpClient();
-	HttpGet httpGet = new HttpGet("http://94.194.98.255/public_html/objects/get_objects.php");
+	HttpGet httpGet = new HttpGet("http://151.225.131.91/public_html/objects/get_objects.php");
 
 	@Override
 	protected void onPreExecute() {
